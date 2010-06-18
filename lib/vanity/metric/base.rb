@@ -20,7 +20,7 @@ module Vanity
     #     description "Most boring metric ever"
     #   end
     module Definition
-      
+
       attr_reader :playground
 
       # Defines a new metric, using the class Vanity::Metric.
@@ -37,7 +37,7 @@ module Vanity
       end
 
     end
-  
+
     # Startup metrics for pirates. AARRR stands for:
     # * Acquisition
     # * Activation
@@ -53,7 +53,7 @@ module Vanity
       # A metric object may have a +description+ method that returns a detailed
       # description.  It may also have no description, or no +description+
       # method, in which case return +nil+.
-      # 
+      #
       # @example
       #   puts Vanity::Metric.description(metric)
       def description(metric)
@@ -65,7 +65,7 @@ module Vanity
       # A metric object may have a +bounds+ method that returns lower and upper
       # bounds.  It may also have no bounds, or no +bounds+ # method, in which
       # case we return +[nil, nil]+.
-      # 
+      #
       # @example
       #   upper = Vanity::Metric.bounds(metric).last
       def bounds(metric)
@@ -80,8 +80,8 @@ module Vanity
       # argument is end date, defaults to today.
       #
       # @example These are all equivalent:
-      #   Vanity::Metric.data(my_metric) 
-      #   Vanity::Metric.data(my_metric, 90) 
+      #   Vanity::Metric.data(my_metric)
+      #   Vanity::Metric.data(my_metric, 90)
       #   Vanity::Metric.data(my_metric, Date.today - 89)
       #   Vanity::Metric.data(my_metric, Date.today - 89, Date.today)
       def data(metric, *args)
@@ -164,10 +164,10 @@ module Vanity
     # The default implementation returns +nil+.
     def bounds
     end
-    
+
 
     #  -- Reporting --
-    
+
     # Human readable metric name.  All metrics must implement this method.
     attr_reader :name
     alias :to_s :name
@@ -192,7 +192,8 @@ module Vanity
     # Given two arguments, a start date and an end date (inclusive), returns an
     # array of measurements.  All metrics must implement this method.
     def values(from, to)
-      redis.mget((from.to_date..to.to_date).map { |date| key(date, "count") }).map(&:to_i)
+      keys = (from.to_date..to.to_date).map { |date| key(date, "count") }
+      redis.mget(*keys).map(&:to_i)
     end
 
 
